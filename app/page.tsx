@@ -320,7 +320,7 @@ export default function Home() {
                     ))}
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed italic">
-                    "{t.quote}"
+                    &quot;{t.quote}&quot;
                   </p>
                   <div className="flex items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
                     <div className="w-9 h-9 rounded-full bg-sky-100 dark:bg-sky-900/40 border border-sky-100 dark:border-sky-900/50 flex items-center justify-center text-sm">
