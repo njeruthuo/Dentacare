@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { Outfit, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 
+import ReduxProvider from "@/store/provider";
+
 // Body font — clean, modern, medical-grade feel
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -97,7 +99,9 @@ export default function RootLayout({
         />
 
         {/* Page content sits above glows */}
-        <div className="relative z-10 flex flex-col flex-1">{children}</div>
+        <ReduxProvider>
+          <div className="relative z-10 flex flex-col flex-1">{children}</div>
+        </ReduxProvider>
       </body>
     </html>
   );
