@@ -1,32 +1,12 @@
 // src/store/api/authApi.ts
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
-
-interface LoginResponse {
-  access: string;
-  refresh: string;
-}
-
-interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-interface RegisterRequest {
-  firstName: string;
-  lastName: string;
-  email: string;
-  username: string;
-  password: string;
-}
-
-interface RegisterResponse {
-  id: number;
-  email: string;
-  username: string;
-  firstName: string;
-  lastName: string;
-}
+import {
+  LoginRequest,
+  LoginResponse,
+  RegisterRequest,
+  RegisterResponse,
+} from "@/types/user";
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -34,21 +14,23 @@ export const authApi = createApi({
   endpoints: (builder) => ({
     login: builder.mutation<LoginResponse, LoginRequest>({
       query: (credentials) => ({
-        url: "/token/",
+        url: "auth/login",
         method: "POST",
         body: credentials,
       }),
     }),
+
     register: builder.mutation<RegisterResponse, RegisterRequest>({
       query: (data) => ({
-        url: "/register/",
+        url: "auth/register/",
         method: "POST",
         body: data,
       }),
     }),
+
     refreshToken: builder.mutation<{ access: string }, { refresh: string }>({
       query: (data) => ({
-        url: "/token/refresh/",
+        url: "auth/token/refresh/",
         method: "POST",
         body: data,
       }),

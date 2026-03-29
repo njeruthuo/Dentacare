@@ -2,12 +2,30 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useLoginMutation } from "@/store/api/authApi";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "@/store/slices/authSlice";
 
 export default function LoginPage() {
+  const [login] = useLoginMutation();
+  const dispatch = useDispatch();
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    try {
+      const result = await login(formData).unwrap();
+
+      dispatch(
+        setCredentials({
+          user: result.user,
+          accessToken: result.access,
+          refreshToken: result.refresh,
+        }),
+      );
+    } catch (error) {
+      console.log(error);
+    }
     console.log("Logging in with:", formData);
   };
 

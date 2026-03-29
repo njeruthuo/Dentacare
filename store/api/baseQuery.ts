@@ -12,7 +12,6 @@ const base = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
   prepareHeaders: (headers, { getState }) => {
     const state = getState() as RootState;
-    // Prefer Redux state, fallback to localStorage safely
     const token =
       state.auth.accessToken ||
       (typeof window !== "undefined"
@@ -34,10 +33,18 @@ export const baseQueryWithReauth: BaseQueryFn<
   let result = await base(args, api, extraOptions);
 
   // Check if we got a 401 and we aren't already trying to refresh
-  const isRefreshRequest =
-    typeof args !== "string" && args.url === "/token/refresh/";
+  const requestUrl = typeof args === "string" ? args : args.url;
 
-  if (result.error?.status === 401 && !isRefreshRequest) {
+  const isAuthRoute =
+    requestUrl.startsWith("auth/") ||
+    requestUrl.includes("login") ||
+    requestUrl.includes("register") ||
+    requestUrl.includes("token/refresh");
+
+  // const isRefreshRequest =
+  //   typeof args !== "string" && args.url === "auth/token/refresh/";
+
+  if (result.error?.status === 401 && !isAuthRoute) {
     const state = api.getState() as RootState;
     const refreshToken =
       state.auth.refreshToken ||
@@ -53,7 +60,7 @@ export const baseQueryWithReauth: BaseQueryFn<
     // Attempt to get a new access token
     const refreshResult = await base(
       {
-        url: "/token/refresh/",
+        url: "auth/token/refresh/",
         method: "POST",
         body: { refresh: refreshToken },
       },
