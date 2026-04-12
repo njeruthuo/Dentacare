@@ -21,9 +21,11 @@ export default function GlobalLayout({
     (state: RootState) => state.auth.isAuthenticated,
   );
 
+  console.log(isAuthenticated, "isAuthenticated");
+
   useEffect(() => {
-    if (isAuthenticated) {
-      router.replace("/addservice");
+    if (!isAuthenticated) {
+      router.replace("/login");
     }
   }, [isAuthenticated, router]);
 

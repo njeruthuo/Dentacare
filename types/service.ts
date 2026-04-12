@@ -3,4 +3,5 @@ export interface ServiceFormData {
   price: string;
   description: string;
   poster: File | null;
+  dental: string;
 }

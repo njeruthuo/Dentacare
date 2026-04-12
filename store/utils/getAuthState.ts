@@ -6,3 +6,7 @@ export function userIsAuthenticated() {
     ) || false
   );
 }
+
+export function getDentalID() {
+  return localStorage.getItem("dentalID") || "";
+}

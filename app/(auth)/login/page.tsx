@@ -21,6 +21,7 @@ export default function LoginPage() {
           user: result.user,
           accessToken: result.access,
           refreshToken: result.refresh,
+          dental: result.dental,
         }),
       );
     } catch (error) {

@@ -1,15 +1,15 @@
 "use client";
 
+import { initialServiceState } from "@/data/service";
+import { useCreateServiceMutation } from "@/store/api/serviceApi";
+import { getDentalID } from "@/store/utils/getAuthState";
 import { ServiceFormData } from "@/types/service";
 import { useState } from "react";
 
 const AddService = () => {
-  const [formData, setFormData] = useState<ServiceFormData>({
-    name: "",
-    price: "",
-    description: "",
-    poster: null,
-  });
+  const [createService, { isLoading }] = useCreateServiceMutation();
+  const [formData, setFormData] =
+    useState<ServiceFormData>(initialServiceState);
 
   const [preview, setPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,6 +30,11 @@ const AddService = () => {
     }
   };
 
+  const clearState = () => {
+    setFormData(initialServiceState);
+    setPreview(null);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -38,13 +43,15 @@ const AddService = () => {
       const payload = new FormData();
       payload.append("name", formData.name);
       payload.append("price", formData.price);
+      payload.append("dental", getDentalID());
       payload.append("description", formData.description);
       if (formData.poster) {
         payload.append("poster", formData.poster);
       }
 
       console.log("Submitting service:", formData);
-      // await createService(payload).unwrap();
+      await createService(payload).unwrap();
+      clearState();
     } finally {
       setIsSubmitting(false);
     }
@@ -58,8 +65,8 @@ const AddService = () => {
 
       <div className="relative w-full max-w-xl">
         {/* Corner accents */}
-        <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-sky-200 dark:border-sky-800 rounded-tl-lg" />
-        <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-sky-200 dark:border-sky-800 rounded-br-lg" />
+        {/* <div className="absolute -top-3 -left-3 w-6 h-6 border-t-2 border-l-2 border-sky-200 dark:border-sky-800 rounded-tl-lg" />
+        <div className="absolute -bottom-3 -right-3 w-6 h-6 border-b-2 border-r-2 border-sky-200 dark:border-sky-800 rounded-br-lg" /> */}
 
         {/* Card */}
         <div className="card p-8">
@@ -185,15 +192,7 @@ const AddService = () => {
               <button
                 type="button"
                 className="btn-secondary flex-1 py-3"
-                onClick={() => {
-                  setFormData({
-                    name: "",
-                    price: "",
-                    description: "",
-                    poster: null,
-                  });
-                  setPreview(null);
-                }}
+                onClick={clearState}
               >
                 Clear
               </button>

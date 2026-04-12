@@ -11,12 +11,14 @@ export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   isAuthenticated: boolean;
+  dental: number | null;
 }
 
 export interface LoginResponse {
   access: string;
   refresh: string;
   user: User;
+  dental: number;
 }
 
 export interface LoginRequest {
