@@ -1,12 +1,12 @@
-// src/store/slices/authSlice.ts
 import { AuthState, User } from "@/types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { userIsAuthenticated } from "../utils/getAuthState";
 
 const initialState: AuthState = {
   user: null,
   accessToken: null,
   refreshToken: null,
-  isAuthenticated: false,
+  isAuthenticated: userIsAuthenticated(),
 };
 
 const authSlice = createSlice({
