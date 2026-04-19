@@ -27,7 +27,6 @@ export default function LoginPage() {
     } catch (error) {
       console.log(error);
     }
-    console.log("Logging in with:", formData);
   };
 
   return (

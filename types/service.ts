@@ -35,6 +35,7 @@ export interface Appointment {
 
 export interface ReviewPayloadType {
   user: number;
+  user_details: User;
   dental: number;
   description: string;
   rating: number;

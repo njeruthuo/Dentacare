@@ -1,5 +1,6 @@
 // src/app/layout.tsx
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Outfit, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 
@@ -38,6 +39,26 @@ export const metadata: Metadata = {
   },
 };
 
+<Script
+  id="theme-init"
+  strategy="beforeInteractive"
+  dangerouslySetInnerHTML={{
+    __html: `
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          if (stored === 'dark' || (!stored && prefersDark)) {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        } catch (_) {}
+      })();
+    `,
+  }}
+/>;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -56,7 +77,7 @@ export default function RootLayout({
           Inline script to apply dark/light class before first paint
           — prevents flash of wrong theme.
         */}
-        <script
+        {/* <script
           dangerouslySetInnerHTML={{
             __html: `
               (function () {
@@ -72,7 +93,7 @@ export default function RootLayout({
               })();
             `,
           }}
-        />
+        /> */}
       </head>
       <body
         className={[

@@ -1,8 +1,27 @@
-// src/app/page.tsx
-import LogoHead, { ToothIcon } from "@/components/LogoHead";
+"use client";
+
 import Link from "next/link";
+import LogoHead, { ToothIcon } from "@/components/LogoHead";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store/store";
+import { logout } from "@/store/slices/authSlice";
+import { getDentalID } from "@/store/utils/getAuthState";
+import {
+  useGetReviewsQuery,
+  useGetServicesQuery,
+} from "@/store/api/serviceApi";
 
 export default function Home() {
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated,
+  );
+
+  const { data: services } = useGetServicesQuery(Number(getDentalID()));
+  const { data: testimonials } = useGetReviewsQuery(Number(getDentalID()));
+
+  console.log(testimonials, "testimonials");
+
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 font-sans overflow-x-hidden">
       {/* ── Nav ── */}
@@ -26,12 +45,24 @@ export default function Home() {
 
           <div className="flex items-center gap-3">
             <Link
-              href="/login"
+              href={isAuthenticated ? "" : "/login"}
               className="hidden sm:block text-sm text-slate-600 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors"
             >
-              Sign in
+              {isAuthenticated ? (
+                <span
+                  onClick={() => dispatch(logout())}
+                  className="bg-pink-500 rounded-sm text-white font-bold text-sm px-4 py-2"
+                >
+                  Logout
+                </span>
+              ) : (
+                "Sign in"
+              )}
             </Link>
-            <Link href="/register" className="btn-primary text-sm px-4 py-2">
+            <Link
+              href="/addappointment"
+              className="btn-primary text-sm px-4 py-2"
+            >
               Book Appointment
             </Link>
           </div>
@@ -188,22 +219,40 @@ export default function Home() {
             </div>
 
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {services.map((s) => (
+              {(services || [])?.map((s) => (
                 <div
-                  key={s.title}
-                  className="card p-6 hover:shadow-brand-sm hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
+                  key={s.name}
+                  className="card overflow-hidden hover:shadow-brand-sm hover:-translate-y-1 transition-all duration-300 group cursor-pointer"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-sky-50 dark:bg-sky-950/50 border border-sky-100 dark:border-sky-900/50 flex items-center justify-center mb-5 group-hover:bg-sky-600 group-hover:border-sky-600 transition-colors duration-300">
-                    <span className="text-sky-600 group-hover:text-white text-xl transition-colors duration-300">
-                      {s.icon}
+                  {/* Poster */}
+                  <div className="relative h-44 w-full overflow-hidden bg-sky-50 dark:bg-sky-950/50">
+                    {s?.poster ? (
+                      <img
+                        src={s.poster}
+                        alt={s.name}
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                    ) : (
+                      /* Fallback when no poster uploaded */
+                      <div className="flex h-full w-full items-center justify-center">
+                        <span className="text-5xl opacity-30">🦷</span>
+                      </div>
+                    )}
+                    {/* Price badge */}
+                    <span className="absolute top-3 right-3 rounded-full bg-white/90 dark:bg-slate-900/80 backdrop-blur-sm px-3 py-1 text-xs font-semibold text-sky-600 dark:text-sky-400 shadow-sm">
+                      KSH {s.price}
                     </span>
                   </div>
-                  <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-2">
-                    {s.title}
-                  </h3>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                    {s.description}
-                  </p>
+
+                  {/* Body */}
+                  <div className="p-5">
+                    <h3 className="font-semibold text-slate-800 dark:text-slate-100 mb-1.5">
+                      {s.name}
+                    </h3>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed line-clamp-2">
+                      {s.description}
+                    </p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -303,8 +352,11 @@ export default function Home() {
               </h2>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {testimonials.map((t) => (
-                <div key={t.name} className="card p-6 flex flex-col gap-4">
+              {(testimonials || []).map((t) => (
+                <div
+                  key={t.description}
+                  className="card p-6 flex flex-col gap-4"
+                >
                   {/* Stars */}
                   <div className="flex gap-0.5">
                     {[...Array(5)].map((_, i) => (
@@ -314,17 +366,19 @@ export default function Home() {
                     ))}
                   </div>
                   <p className="text-slate-600 dark:text-slate-300 text-sm leading-relaxed italic">
-                    &quot;{t.quote}&quot;
+                    &quot;{t.description}&quot;
                   </p>
                   <div className="flex items-center gap-3 pt-2 border-t border-slate-100 dark:border-slate-800">
                     <div className="w-9 h-9 rounded-full bg-sky-100 dark:bg-sky-900/40 border border-sky-100 dark:border-sky-900/50 flex items-center justify-center text-sm">
-                      {t.avatar}
+                      {"🤗"}
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                        {t.name}
+                        {`${t.user_details.first_name} ${t.user_details.last_name}`}
                       </div>
-                      <div className="text-xs text-slate-400">{t.location}</div>
+                      <div className="text-xs text-slate-400">
+                        {"Nairobi, KE"}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -404,44 +458,44 @@ export default function Home() {
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
-const services = [
-  {
-    icon: "🦷",
-    title: "General Dentistry",
-    description:
-      "Routine checkups, cleanings, fillings, and preventive care to keep your teeth healthy for life.",
-  },
-  {
-    icon: "✨",
-    title: "Cosmetic Dentistry",
-    description:
-      "Teeth whitening, veneers, and smile makeovers designed to give you the confidence you deserve.",
-  },
-  {
-    icon: "🔧",
-    title: "Orthodontics",
-    description:
-      "Braces and clear aligners tailored to straighten your teeth comfortably and discreetly.",
-  },
-  {
-    icon: "🪥",
-    title: "Dental Implants",
-    description:
-      "Permanent, natural-looking tooth replacements that restore both function and appearance.",
-  },
-  {
-    icon: "👶",
-    title: "Pediatric Dentistry",
-    description:
-      "Gentle, fun, and reassuring dental care specially designed for children of all ages.",
-  },
-  {
-    icon: "🩺",
-    title: "Oral Surgery",
-    description:
-      "Extractions, jaw surgery, and other procedures performed with precision and care.",
-  },
-];
+// const services = [
+//   {
+//     icon: "🦷",
+//     title: "General Dentistry",
+//     description:
+//       "Routine checkups, cleanings, fillings, and preventive care to keep your teeth healthy for life.",
+//   },
+//   {
+//     icon: "✨",
+//     title: "Cosmetic Dentistry",
+//     description:
+//       "Teeth whitening, veneers, and smile makeovers designed to give you the confidence you deserve.",
+//   },
+//   {
+//     icon: "🔧",
+//     title: "Orthodontics",
+//     description:
+//       "Braces and clear aligners tailored to straighten your teeth comfortably and discreetly.",
+//   },
+//   {
+//     icon: "🪥",
+//     title: "Dental Implants",
+//     description:
+//       "Permanent, natural-looking tooth replacements that restore both function and appearance.",
+//   },
+//   {
+//     icon: "👶",
+//     title: "Pediatric Dentistry",
+//     description:
+//       "Gentle, fun, and reassuring dental care specially designed for children of all ages.",
+//   },
+//   {
+//     icon: "🩺",
+//     title: "Oral Surgery",
+//     description:
+//       "Extractions, jaw surgery, and other procedures performed with precision and care.",
+//   },
+// ];
 
 const whyUs = [
   {
@@ -497,26 +551,26 @@ const team = [
   },
 ];
 
-const testimonials = [
-  {
-    avatar: "🙂",
-    name: "Grace Mwangi",
-    location: "Nairobi, KE",
-    quote:
-      "The team made me feel so comfortable from the first visit. My smile has never looked better — I can't stop grinning!",
-  },
-  {
-    avatar: "😊",
-    name: "Brian Otieno",
-    location: "Mombasa, KE",
-    quote:
-      "I was terrified of dentists until I came here. The staff are incredibly patient and the results are amazing.",
-  },
-  {
-    avatar: "🤗",
-    name: "Fatuma Hassan",
-    location: "Kisumu, KE",
-    quote:
-      "Booked online in under a minute, was seen on time, and left with a sparkling clean smile. 10/10 experience.",
-  },
-];
+// const testimonials = [
+//   {
+//     avatar: "🙂",
+//     name: "Grace Mwangi",
+//     location: "Nairobi, KE",
+//     quote:
+//       "The team made me feel so comfortable from the first visit. My smile has never looked better — I can't stop grinning!",
+//   },
+//   {
+//     avatar: "😊",
+//     name: "Brian Otieno",
+//     location: "Mombasa, KE",
+//     quote:
+//       "I was terrified of dentists until I came here. The staff are incredibly patient and the results are amazing.",
+//   },
+//   {
+//     avatar: "🤗",
+//     name: "Fatuma Hassan",
+//     location: "Kisumu, KE",
+//     quote:
+//       "Booked online in under a minute, was seen on time, and left with a sparkling clean smile. 10/10 experience.",
+//   },
+// ];

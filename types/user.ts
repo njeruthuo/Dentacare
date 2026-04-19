@@ -2,8 +2,8 @@ export interface User {
   id: number;
   email: string;
   username: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
 }
 
 export interface AuthState {

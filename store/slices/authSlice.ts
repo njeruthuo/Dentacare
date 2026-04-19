@@ -4,9 +4,9 @@ import { authData, userIsAuthenticated } from "../utils/getAuthState";
 
 const initialState: AuthState = {
   user: (authData.get("user") as unknown as User) ?? null,
-  accessToken: authData.get("accessToken") ?? null,
+  accessToken: (authData.get("accessToken") as string) ?? null,
   dental: (authData.get("dental") as unknown as number) ?? null,
-  refreshToken: authData.get("refreshToken") ?? null,
+  refreshToken: (authData.get("refreshToken") as string) ?? null,
   isAuthenticated: userIsAuthenticated(),
 };
 
@@ -35,16 +35,16 @@ const authSlice = createSlice({
       localStorage.setItem("refreshToken", action.payload.refreshToken);
     },
     logout: (state) => {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("userInfo");
+      localStorage.removeItem("dentalID");
+      localStorage.removeItem("refreshToken");
+
       state.user = null;
       state.accessToken = null;
       state.refreshToken = null;
       state.isAuthenticated = false;
       state.dental = null;
-
-      localStorage.removeItem("accessToken");
-      localStorage.removeItem("userInfo");
-      localStorage.removeItem("dentalID");
-      localStorage.removeItem("refreshToken");
     },
   },
 });

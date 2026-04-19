@@ -21,8 +21,6 @@ const AddAppointment = () => {
     initialAppointmentState,
   );
 
-  console.log(services, "services");
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
@@ -44,7 +42,7 @@ const AddAppointment = () => {
       await createAppointment({
         ...formData,
         dental: getDentalID(),
-        user: getUserID(),
+        user: Number(getUserID()),
         status: "pending",
       }).unwrap();
       clearState();
@@ -159,7 +157,7 @@ const AddAppointment = () => {
               </button>
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isLoading}
                 className="btn-primary flex-1 py-3 shadow-brand"
               >
                 {isSubmitting ? "Booking…" : "Book Appointment"}

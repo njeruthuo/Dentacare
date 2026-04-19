@@ -34,7 +34,7 @@ export const serviceApi = createApi({
       invalidatesTags: ["Reviews"],
     }),
     getReviews: builder.query<ReviewPayloadType[], number>({
-      query: (dentalID) => `review/${dentalID}`,
+      query: (dentalID) => `reviews/?dental_id${dentalID}`,
       providesTags: ["Reviews"],
     }),
 
@@ -47,7 +47,7 @@ export const serviceApi = createApi({
       invalidatesTags: ["Appointments"],
     }),
     getAppointments: builder.query<AppointmentPayloadType[], number>({
-      query: (dentalID) => `appointments/${dentalID}`,
+      query: (dentalID) => `appointments/?dental_id${dentalID}`,
       providesTags: ["Appointments"],
     }),
   }),
