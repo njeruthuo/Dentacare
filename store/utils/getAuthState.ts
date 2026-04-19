@@ -9,6 +9,22 @@ export function userIsAuthenticated() {
   );
 }
 
+export const getDefaultValues = (): Map<string, string | null> => {
+  const userInfo = JSON.parse(
+    localStorage.getItem("userInfo") || "null",
+  ) as User;
+
+  const authMap = new Map<string, string | null>();
+
+  authMap.set("user", userInfo as unknown as string);
+  authMap.set("accessToken", localStorage.getItem("accessToken"));
+  authMap.set("dental", localStorage.getItem("dental"));
+  authMap.set("refreshToken", localStorage.getItem("refreshToken"));
+
+  return authMap;
+};
+export const authData = getDefaultValues();
+
 export function getDentalID() {
   return Number(localStorage.getItem("dentalID"));
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import LogoHead, { ToothIcon } from "@/components/LogoHead";
+import MobileLogo from "@/components/MobileLogo";
 import { RootState } from "@/store/store";
 import type { Metadata } from "next";
 import { useRouter } from "next/navigation";
@@ -20,8 +22,6 @@ export default function GlobalLayout({
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   );
-
-  console.log(isAuthenticated, "isAuthenticated");
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -74,16 +74,7 @@ export default function GlobalLayout({
         </div>
 
         {/* Logo */}
-        <div className="relative z-10">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/10 backdrop-blur flex items-center justify-center border border-white/20">
-              <ToothIcon className="w-5 h-5 text-cyan-300" />
-            </div>
-            <span className="text-white font-semibold text-lg tracking-wide">
-              DentaCare
-            </span>
-          </div>
-        </div>
+        <LogoHead />
 
         {/* Center illustration */}
         <div className="relative z-10 flex flex-col items-center text-center">
@@ -135,14 +126,7 @@ export default function GlobalLayout({
       {/* ── Right panel (form) ── */}
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 sm:px-12 lg:px-16 bg-white dark:bg-slate-950">
         {/* Mobile logo */}
-        <div className="lg:hidden flex items-center gap-2 mb-10">
-          <div className="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center">
-            <ToothIcon className="w-4 h-4 text-white" />
-          </div>
-          <span className="text-sky-700 dark:text-sky-400 font-semibold text-base tracking-wide">
-            DentaCare
-          </span>
-        </div>
+        <MobileLogo />
 
         {/* Subtle top accent */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-sky-100 dark:bg-sky-950/50 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl pointer-events-none" />
@@ -166,18 +150,5 @@ export default function GlobalLayout({
         </p>
       </div>
     </section>
-  );
-}
-
-function ToothIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="M12 2C9.5 2 7.5 3.5 6.5 5.5C5.5 4.5 4 4 3 5C1.5 6.5 2 9 3 11C4 13 4 15 4.5 17C5 19 6 22 7.5 22C9 22 9.5 20 10 18.5C10.5 17 11 16 12 16C13 16 13.5 17 14 18.5C14.5 20 15 22 16.5 22C18 22 19 19 19.5 17C20 15 20 13 21 11C22 9 22.5 6.5 21 5C20 4 18.5 4.5 17.5 5.5C16.5 3.5 14.5 2 12 2Z" />
-    </svg>
   );
 }

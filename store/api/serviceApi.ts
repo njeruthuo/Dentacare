@@ -1,6 +1,7 @@
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { baseQueryWithReauth } from "./baseQuery";
 import {
+  Appointment,
   AppointmentPayloadType,
   ReviewPayloadType,
   ServiceFormData,
@@ -18,12 +19,12 @@ export const serviceApi = createApi({
       }),
     }),
     getServices: builder.query<ServiceFormData[], number>({
-      query: (dentalID) => `services/${dentalID}`,
+      query: (dentalID) => `services/?dental_id${dentalID}`,
     }),
 
     createReview: builder.mutation<ServiceFormData, ReviewPayloadType>({
       query: (data) => ({
-        url: "review/",
+        url: "reviews/",
         method: "POST",
         body: data,
       }),
@@ -32,12 +33,9 @@ export const serviceApi = createApi({
       query: (dentalID) => `review/${dentalID}`,
     }),
 
-    createAppointment: builder.mutation<
-      ServiceFormData,
-      AppointmentPayloadType
-    >({
+    createAppointment: builder.mutation<Appointment, AppointmentPayloadType>({
       query: (data) => ({
-        url: "appointment/",
+        url: "appointments/",
         method: "POST",
         body: data,
       }),

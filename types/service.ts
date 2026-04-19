@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface ServiceFormData {
   id?: number;
   name: string;
@@ -14,6 +16,21 @@ export interface AppointmentPayloadType {
   user: number;
   dental: number;
   status: "pending" | "canceled" | "completed" | "confirmed";
+}
+
+export interface Appointment {
+  id: number;
+  user: User;
+  user_details: User;
+  dental: number;
+  dental_name: string;
+  service: number;
+  service_name: string;
+  booking_dt: string;
+  notes: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface ReviewPayloadType {

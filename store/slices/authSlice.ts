@@ -1,12 +1,12 @@
 import { AuthState, User } from "@/types/user";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { userIsAuthenticated } from "../utils/getAuthState";
+import { authData, userIsAuthenticated } from "../utils/getAuthState";
 
 const initialState: AuthState = {
-  user: null,
-  accessToken: null,
-  dental: null,
-  refreshToken: null,
+  user: (authData.get("user") as unknown as User) ?? null,
+  accessToken: authData.get("accessToken") ?? null,
+  dental: (authData.get("dental") as unknown as number) ?? null,
+  refreshToken: authData.get("refreshToken") ?? null,
   isAuthenticated: userIsAuthenticated(),
 };
 
@@ -30,6 +30,7 @@ const authSlice = createSlice({
       state.dental = action.payload.dental;
 
       localStorage.setItem("accessToken", action.payload.accessToken);
+      localStorage.setItem("userInfo", JSON.stringify(action.payload.user));
       localStorage.setItem("dentalID", action.payload.dental.toString());
       localStorage.setItem("refreshToken", action.payload.refreshToken);
     },
@@ -41,6 +42,7 @@ const authSlice = createSlice({
       state.dental = null;
 
       localStorage.removeItem("accessToken");
+      localStorage.removeItem("userInfo");
       localStorage.removeItem("dentalID");
       localStorage.removeItem("refreshToken");
     },

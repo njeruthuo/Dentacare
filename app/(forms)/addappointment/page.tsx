@@ -20,6 +20,9 @@ const AddAppointment = () => {
   const [formData, setFormData] = useState<AppointmentFormData>(
     initialAppointmentState,
   );
+
+  console.log(services, "services");
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
@@ -90,8 +93,8 @@ const AddAppointment = () => {
                 <option value="" disabled>
                   Select a dental service…
                 </option>
-                {services?.map((svc) => (
-                  <option key={svc.id} value={svc.id}>
+                {services?.map((svc, index) => (
+                  <option key={index} value={svc.id}>
                     {svc.name} — KSH {svc.price}
                   </option>
                 ))}
