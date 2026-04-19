@@ -35,6 +35,7 @@ export const getDefaultValues = (): Map<string, string | User | null> => {
   authMap.set("accessToken", safeGetString("accessToken"));
   authMap.set("dental", safeGetString("dental"));
   authMap.set("refreshToken", safeGetString("refreshToken"));
+  authMap.set("role", safeGetString("role"));
   return authMap;
 };
 
@@ -43,6 +44,10 @@ export const authData = getDefaultValues();
 export function userIsAuthenticated(): boolean {
   if (!isBrowser) return false;
   return Boolean(safeGetString("accessToken") && safeGetString("refreshToken"));
+}
+
+export function getUserRole(): string {
+  return safeGetString("role") || "";
 }
 
 export function getDentalID(): number {

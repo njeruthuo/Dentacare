@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import AdminPanel from "@/components/AdminPanel";
 import LogoHead, { ToothIcon } from "@/components/LogoHead";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/store/store";
@@ -10,17 +11,18 @@ import {
   useGetReviewsQuery,
   useGetServicesQuery,
 } from "@/store/api/serviceApi";
+import AIChatPanel from "@/components/AIChatpanel";
 
 export default function Home() {
   const dispatch = useDispatch();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated,
   );
+  const user = useSelector((state: RootState) => state.auth.user);
+  const isAdmin = user?.role === "admin";
 
   const { data: services } = useGetServicesQuery(Number(getDentalID()));
   const { data: testimonials } = useGetReviewsQuery(Number(getDentalID()));
-
-  console.log(testimonials, "testimonials");
 
   return (
     <div className="flex flex-col min-h-screen bg-white dark:bg-slate-950 font-sans overflow-x-hidden">
@@ -424,6 +426,9 @@ export default function Home() {
           </div>
         </section>
       </main>
+
+      <AIChatPanel />
+      {isAdmin && <AdminPanel />}
 
       {/* ── Footer ── */}
       <footer className="border-t border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-950 py-10">

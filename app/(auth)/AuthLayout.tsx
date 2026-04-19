@@ -25,7 +25,7 @@ export default function AuthLayoutClient({
 
   useEffect(() => {
     if (isAuthenticated) {
-      router.replace("/addservice");
+      router.replace("/");
     }
   }, [isAuthenticated, router]);
 

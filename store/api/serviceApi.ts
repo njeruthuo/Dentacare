@@ -6,10 +6,11 @@ import {
   ReviewPayloadType,
   ServiceFormData,
 } from "@/types/service";
+import { WorkerFormData } from "@/types/user";
 
 export const serviceApi = createApi({
   reducerPath: "serviceApi",
-  tagTypes: ["Appointments", "Services", "Reviews"],
+  tagTypes: ["Appointments", "Services", "Reviews", "Workers"],
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     createService: builder.mutation<ServiceFormData, ServiceFormData>({
@@ -50,6 +51,14 @@ export const serviceApi = createApi({
       query: (dentalID) => `appointments/?dental_id${dentalID}`,
       providesTags: ["Appointments"],
     }),
+
+    createWorker: builder.mutation<void, WorkerFormData>({
+      query: (data) => ({
+        url: "workers/",
+        method: "POST",
+        body: data,
+      }),
+    }),
   }),
 });
 
@@ -57,6 +66,7 @@ export const {
   useCreateServiceMutation,
   useCreateReviewMutation,
   useCreateAppointmentMutation,
+  useCreateWorkerMutation,
 
   useGetServicesQuery,
   useGetAppointmentsQuery,
