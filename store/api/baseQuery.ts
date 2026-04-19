@@ -7,6 +7,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import { setCredentials, logout } from "../slices/authSlice";
 import type { RootState } from "../store";
+import { LoginResponse } from "@/types/user";
 
 const base = fetchBaseQuery({
   baseUrl: process.env.NEXT_PUBLIC_API_URL,
@@ -69,12 +70,13 @@ export const baseQueryWithReauth: BaseQueryFn<
     );
 
     if (refreshResult.data) {
-      const { access } = refreshResult.data as { access: string };
+      const { access, dental } = refreshResult.data as LoginResponse;
       const currentUser = (api.getState() as RootState).auth.user;
 
       // Update Redux
       api.dispatch(
         setCredentials({
+          dental: dental,
           user: currentUser!,
           accessToken: access,
           refreshToken: refreshToken,

@@ -1,3 +1,5 @@
+import { User } from "@/types/user";
+
 export function userIsAuthenticated() {
   return (
     Boolean(
@@ -8,5 +10,10 @@ export function userIsAuthenticated() {
 }
 
 export function getDentalID() {
-  return localStorage.getItem("dentalID") || "";
+  return Number(localStorage.getItem("dentalID"));
+}
+
+export function getUserID() {
+  const data = JSON.parse(localStorage.getItem("userInfo") || "") as User;
+  return data.id;
 }
