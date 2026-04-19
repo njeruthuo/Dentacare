@@ -9,6 +9,7 @@ import {
 
 export const serviceApi = createApi({
   reducerPath: "serviceApi",
+  tagTypes: ["Appointments", "Services", "Reviews"],
   baseQuery: baseQueryWithReauth,
   endpoints: (builder) => ({
     createService: builder.mutation<ServiceFormData, ServiceFormData>({
@@ -17,9 +18,11 @@ export const serviceApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Services"],
     }),
     getServices: builder.query<ServiceFormData[], number>({
       query: (dentalID) => `services/?dental_id${dentalID}`,
+      providesTags: ["Services"],
     }),
 
     createReview: builder.mutation<ServiceFormData, ReviewPayloadType>({
@@ -28,9 +31,11 @@ export const serviceApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Reviews"],
     }),
     getReviews: builder.query<ReviewPayloadType[], number>({
       query: (dentalID) => `review/${dentalID}`,
+      providesTags: ["Reviews"],
     }),
 
     createAppointment: builder.mutation<Appointment, AppointmentPayloadType>({
@@ -39,9 +44,11 @@ export const serviceApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Appointments"],
     }),
     getAppointments: builder.query<AppointmentPayloadType[], number>({
       query: (dentalID) => `appointments/${dentalID}`,
+      providesTags: ["Appointments"],
     }),
   }),
 });
