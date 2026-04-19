@@ -5,5 +5,5 @@ export const initialServiceState = {
   price: "",
   description: "",
   poster: null,
-  dental: getDentalID(),
+  dental: Number(getDentalID()),
 };

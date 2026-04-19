@@ -376,7 +376,7 @@ export default function Home() {
                     </div>
                     <div>
                       <div className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                        {`${t.user_details.first_name} ${t.user_details.last_name}`}
+                        {`${t?.user_details?.first_name} ${t?.user_details?.last_name}`}
                       </div>
                       <div className="text-xs text-slate-400">
                         {"Nairobi, KE"}

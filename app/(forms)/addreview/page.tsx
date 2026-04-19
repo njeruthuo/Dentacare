@@ -39,7 +39,7 @@ const AddReview = () => {
       await createReview({
         ...formData,
         dental: getDentalID(),
-        user: getUserID(),
+        user: Number(getUserID()),
       }).unwrap();
       clearState();
     } finally {

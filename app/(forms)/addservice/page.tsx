@@ -43,14 +43,14 @@ const AddService = () => {
       const payload = new FormData();
       payload.append("name", formData.name);
       payload.append("price", formData.price);
-      payload.append("dental", getDentalID());
+      payload.append("dental", getDentalID().toString());
       payload.append("description", formData.description);
       if (formData.poster) {
         payload.append("poster", formData.poster);
       }
 
       console.log("Submitting service:", formData);
-      await createService(payload).unwrap();
+      await createService(payload as unknown as ServiceFormData).unwrap();
       clearState();
     } finally {
       setIsSubmitting(false);

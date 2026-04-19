@@ -6,7 +6,7 @@ export interface ServiceFormData {
   price: string;
   description: string;
   poster: File | null;
-  dental: string;
+  dental: number;
 }
 
 export interface AppointmentPayloadType {
@@ -35,8 +35,8 @@ export interface Appointment {
 
 export interface ReviewPayloadType {
   user: number;
-  user_details: User;
   dental: number;
+  user_details?: User;
   description: string;
   rating: number;
 }
