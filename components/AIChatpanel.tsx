@@ -63,7 +63,7 @@ export default function AIChatPanel() {
         .filter((m) => m.id !== "welcome")
         .map((m) => ({ role: m.role, content: m.content }));
 
-      const response = await fetch("http://localhost:8001/api/chat", {
+      const response = await fetch("https://dentacare-ai-service.onrender.com/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
