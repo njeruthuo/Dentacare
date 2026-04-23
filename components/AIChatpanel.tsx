@@ -78,7 +78,7 @@ export default function AIChatPanel() {
 
       const data = await response.json();
       const replyText =
-        data?.content?.find((b: { type: string }) => b.type === "text")?.text ??
+        data?.content ??
         "Sorry, I couldn't process that. Please try again.";
 
       const assistantMsg: Message = {
