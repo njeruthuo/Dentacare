@@ -9,12 +9,6 @@ interface Message {
   timestamp: Date;
 }
 
-const SYSTEM_PROMPT = `You are DentaBot, a helpful AI assistant for DentaCare Clinic. 
-You help patients and staff with questions about dental services, appointment booking, 
-oral health advice, clinic information, and general dental FAQs. 
-Be warm, professional, and concise. If asked about specific medical diagnoses or 
-emergencies, always recommend the patient visit the clinic or call emergency services.`;
-
 const SUGGESTED_PROMPTS = [
   "What services do you offer?",
   "How do I prepare for a tooth extraction?",
