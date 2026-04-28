@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   id: string;
@@ -8,12 +9,6 @@ interface Message {
   content: string;
   timestamp: Date;
 }
-
-const SYSTEM_PROMPT = `You are DentaBot, a helpful AI assistant for DentaCare Clinic. 
-You help patients and staff with questions about dental services, appointment booking, 
-oral health advice, clinic information, and general dental FAQs. 
-Be warm, professional, and concise. If asked about specific medical diagnoses or 
-emergencies, always recommend the patient visit the clinic or call emergency services.`;
 
 const SUGGESTED_PROMPTS = [
   "What services do you offer?",
@@ -68,20 +63,17 @@ export default function AIChatPanel() {
         .filter((m) => m.id !== "welcome")
         .map((m) => ({ role: m.role, content: m.content }));
 
-      const response = await fetch("https://api.anthropic.com/v1/messages", {
+      const response = await fetch("https://dentacare-ai-service.onrender.com/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: SYSTEM_PROMPT,
           messages: history,
         }),
       });
 
       const data = await response.json();
       const replyText =
-        data?.content?.find((b: { type: string }) => b.type === "text")?.text ??
+        data?.content ??
         "Sorry, I couldn't process that. Please try again.";
 
       const assistantMsg: Message = {
@@ -195,14 +187,27 @@ export default function AIChatPanel() {
                 className={`flex flex-col gap-1 max-w-[78%] ${msg.role === "user" ? "items-end" : "items-start"}`}
               >
                 <div
-                  className={[
-                    "text-sm leading-relaxed rounded-2xl px-3.5 py-2.5",
-                    msg.role === "user"
-                      ? "bg-sky-600 text-white rounded-tr-sm"
-                      : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-tl-sm",
-                  ].join(" ")}
-                >
-                  {msg.content}
+                    className={[
+                      "text-sm leading-relaxed rounded-2xl px-3.5 py-2.5",
+                      msg.role === "user"
+                        ? "bg-sky-600 text-white rounded-tr-sm"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-tl-sm",
+                    ].join(" ")}
+                  >
+                    {msg.role === "assistant" ? (
+                        <ReactMarkdown
+                          components={{
+                            ol: ({node, ...props}) => <ol className="list-decimal ml-4 mt-2 space-y-1" {...props} />,
+                            ul: ({node, ...props}) => <ul className="list-disc ml-4 mt-2 space-y-1" {...props} />,
+                            p: ({node, ...props}) => <p className="mb-2" {...props} />,
+                            strong: ({node, ...props}) => <strong className="font-semibold" {...props} />,
+                          }}
+                        >
+                          {msg.content}
+                        </ReactMarkdown>
+                      ) : (
+                        msg.content
+                      )}
                 </div>
                 <span className="text-[10px] text-slate-400 dark:text-slate-600 px-1">
                   {formatTime(msg.timestamp)}
