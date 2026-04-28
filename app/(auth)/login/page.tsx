@@ -5,9 +5,10 @@ import Link from "next/link";
 import { useLoginMutation } from "@/store/api/authApi";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "@/store/slices/authSlice";
+import Image from "next/image";
 
 export default function LoginPage() {
-  const [login] = useLoginMutation();
+  const [login, { isLoading }] = useLoginMutation();
   const dispatch = useDispatch();
   const [formData, setFormData] = useState({ email: "", password: "" });
 
@@ -79,8 +80,21 @@ export default function LoginPage() {
           />
         </div>
 
-        <button type="submit" className="btn-primary w-full py-3 mt-2">
-          Sign In
+        <button
+          disabled={isLoading}
+          type="submit"
+          className="btn-primary w-full py-3 mt-2 hover:cursor-pointer"
+        >
+          <span>Sign In</span>
+          {isLoading && (
+            <Image
+              className="animate-spin"
+              src={"/progress.svg"}
+              width={22}
+              height={18}
+              alt="Progress bar"
+            />
+          )}
         </button>
       </form>
 
